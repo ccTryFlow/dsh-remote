@@ -1,0 +1,21 @@
+{
+  "name": "dsh-relay-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "LAN relay for dsh: pairing-code device binding plus frame routing for the mobile mini program, running inside the harness process",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "ws": "^8.18.0"
+  }
+}

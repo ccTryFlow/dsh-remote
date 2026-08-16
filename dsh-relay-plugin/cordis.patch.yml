@@ -1,0 +1,12 @@
+# dsh-relay-plugin patch layer: mounts the LAN relay into any profile that
+# installs this bundle. The relay binds its own interface and never widens the
+# web server's; host defaults to all interfaces because phones reach the
+# computer only through the LAN address.
+- insert:
+    - id: relay-lan
+      name: 'dsh-relay-plugin'
+      inject: [webStartup]
+      config:
+        host: '0.0.0.0'
+        port: 4010
+        webPort: !!js ctx.webStartup.port ?? 3080

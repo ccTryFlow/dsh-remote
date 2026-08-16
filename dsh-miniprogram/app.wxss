@@ -1,0 +1,101 @@
+page {
+  --surface-primary: #FFFFFF;
+  --surface-secondary: #F9F9F9;
+  --fg-primary: #1A1A1A;
+  --fg-secondary: #666666;
+  --fg-tertiary: #999999;
+  --border-subtle: #EEEEEE;
+  --accent: #5D5DFF;
+  --accent-soft: #EDEEFF;
+  --accent-2: #E07A5F;
+  --online: #2FA962;
+  background: var(--surface-secondary);
+  color: var(--fg-primary);
+  font-family: -apple-system, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+}
+
+.caption {
+  font-family: 'IBM Plex Mono', Menlo, Consolas, monospace;
+  font-size: 22rpx;
+  letter-spacing: 2rpx;
+  color: var(--fg-tertiary);
+}
+
+.card {
+  background: var(--surface-primary);
+  border: 1rpx solid var(--border-subtle);
+  border-radius: 24rpx;
+}
+
+.page-body {
+  padding: 32rpx 40rpx 200rpx;
+}
+
+.page-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 52rpx;
+  font-weight: 600;
+  color: var(--fg-primary);
+}
+
+.page-subtitle {
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: var(--fg-secondary);
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100rpx;
+  border-radius: 24rpx;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.btn-primary.disabled {
+  opacity: 0.4;
+}
+
+.btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100rpx;
+  border-radius: 24rpx;
+  border: 1rpx solid var(--border-subtle);
+  background: var(--surface-primary);
+  color: var(--fg-secondary);
+  font-size: 30rpx;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 46rpx;
+  padding: 0 20rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid var(--border-subtle);
+  background: var(--surface-primary);
+  font-size: 22rpx;
+  color: var(--fg-secondary);
+}
+
+.chip.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.divider {
+  height: 1rpx;
+  background: var(--border-subtle);
+}

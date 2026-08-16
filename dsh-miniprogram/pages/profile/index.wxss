@@ -1,0 +1,133 @@
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 28rpx;
+  padding: 36rpx 32rpx;
+}
+
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 28rpx;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-size: 36rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-id {
+  flex: 1;
+  min-width: 0;
+}
+
+.id-text {
+  font-size: 20rpx;
+  color: var(--fg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.term {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: var(--fg-primary);
+}
+
+.term-ok {
+  margin-top: 6rpx;
+  font-size: 20rpx;
+  color: var(--online);
+}
+
+.stats {
+  display: flex;
+  margin-top: 24rpx;
+  padding: 28rpx 0;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-num {
+  font-size: 48rpx;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', Menlo, monospace;
+}
+
+.settings {
+  margin-top: 24rpx;
+  padding: 8rpx 32rpx;
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  height: 100rpx;
+  border-top: 1rpx solid var(--border-subtle);
+}
+
+.setting:first-child {
+  border-top: none;
+}
+
+.setting-label {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.gated-tag {
+  font-size: 18rpx;
+  color: var(--accent-2);
+  border: 1rpx solid #F3C9BE;
+  border-radius: 999rpx;
+  padding: 4rpx 14rpx;
+}
+
+.chevron {
+  color: var(--fg-tertiary);
+  font-size: 36rpx;
+}
+
+.preset-label {
+  display: block;
+  margin: 48rpx 0 20rpx;
+}
+
+.preset-empty {
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: var(--fg-tertiary);
+}
+
+.preset-tag {
+  font-size: 18rpx;
+  color: var(--fg-tertiary);
+  border: 1rpx solid var(--border-subtle);
+  border-radius: 999rpx;
+  padding: 4rpx 14rpx;
+}
+
+.preset-check {
+  color: var(--accent);
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.footer {
+  margin-top: 40rpx;
+  text-align: center;
+}

@@ -1,0 +1,51 @@
+<view class="page-body">
+  <view class="page-title">设备</view>
+  <view class="page-subtitle">已配对的电脑 · 经中继安全连接</view>
+
+  <view class="caption section-label">我的设备 · {{devices.length}}</view>
+
+  <view wx:if="{{loading}}" class="caption loading">加载中…</view>
+  <view wx:elif="{{devices.length === 0}}" class="empty">
+    <view class="empty-tile">
+      <view class="empty-screen" />
+      <view class="empty-stand" />
+    </view>
+    <view class="empty-title">还没有设备</view>
+    <view class="empty-sub">在电脑上启动 pnpm dsh web，终端会打印 6 位配对码与二维码</view>
+    <view class="empty-btn" bind:tap="goConnect">＋ 连接设备</view>
+  </view>
+
+  <view
+    wx:for="{{devices}}"
+    wx:key="deviceId"
+    class="card row"
+    data-id="{{item.deviceId}}"
+    data-port="{{item.port}}"
+    data-name="{{item.name}}"
+    bind:tap="openChat"
+    bind:longpress="rowAction"
+  >
+    <view class="tile {{item.online ? 'on' : ''}}">
+      <view class="tile-screen" />
+      <view class="tile-stand" />
+    </view>
+    <view class="info">
+      <view class="name-line">
+        <text class="name">{{item.name}}</text>
+        <text class="status {{item.online ? 'on' : ''}}">{{item.online ? '在线' : '未在线'}}</text>
+      </view>
+      <view class="sub mono">{{item.sub}}</view>
+    </view>
+    <view class="chevron">›</view>
+  </view>
+</view>
+
+<view wx:if="{{menuOpen}}" class="scrim" bind:tap="closeMenu" />
+<view wx:if="{{menuOpen}}" class="menu card">
+  <view class="menu-item" bind:tap="goConnect">
+    <view class="menu-plus">＋</view>
+    <text>连接设备</text>
+  </view>
+</view>
+<view class="fab" bind:tap="openMenu">＋</view>
+<tab-bar active="devices" />

@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/devices/index",
+    "pages/connect/index",
+    "pages/rename/index",
+    "pages/chat/index",
+    "pages/profile/index",
+    "pages/webview/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "DSH 手机版",
+    "backgroundColor": "#F9F9F9"
+  },
+  "usingComponents": {
+    "tab-bar": "/components/tab-bar/tab-bar"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

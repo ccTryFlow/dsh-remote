@@ -1,0 +1,1 @@
+{ "desc": "dsh mobile mini program", "rules": [{ "action": "allow", "page": "*" }] }

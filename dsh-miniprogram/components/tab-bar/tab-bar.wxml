@@ -1,0 +1,10 @@
+<view class="bar">
+  <view class="item {{active === 'devices' ? 'on' : ''}}" data-tab="devices" bind:tap="go">
+    <view class="icon icon-devices" />
+    <text class="label">设备</text>
+  </view>
+  <view class="item {{active === 'profile' ? 'on' : ''}}" data-tab="profile" bind:tap="go">
+    <view class="icon icon-profile" />
+    <text class="label">我的</text>
+  </view>
+</view>

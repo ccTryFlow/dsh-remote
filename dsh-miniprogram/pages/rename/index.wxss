@@ -1,0 +1,90 @@
+.badge {
+  margin-top: 8rpx;
+}
+
+.success {
+  margin-top: 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.check {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ok-title {
+  font-family: Georgia, serif;
+  font-size: 48rpx;
+  font-weight: 600;
+}
+
+.ok-caption {
+  font-size: 20rpx;
+  color: var(--fg-tertiary);
+}
+
+.device-card {
+  margin-top: 48rpx;
+  padding: 28rpx 32rpx;
+}
+
+.id-line {
+  font-size: 20rpx;
+  color: var(--fg-tertiary);
+  word-break: break-all;
+}
+
+.port-line {
+  margin-top: 8rpx;
+  font-size: 32rpx;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.form {
+  margin-top: 56rpx;
+}
+
+.form-label {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.name-input {
+  margin-top: 20rpx;
+  height: 100rpx;
+  background: var(--surface-primary);
+  border: 1rpx solid var(--border-subtle);
+  border-radius: 16rpx;
+  padding: 0 28rpx;
+  font-size: 30rpx;
+}
+
+.placeholder {
+  color: var(--fg-tertiary);
+}
+
+.form-hint {
+  margin-top: 14rpx;
+  font-size: 22rpx;
+  color: var(--fg-tertiary);
+}
+
+.skip {
+  margin-top: 20rpx;
+}
+
+.tip {
+  margin-top: 48rpx;
+  text-align: center;
+}

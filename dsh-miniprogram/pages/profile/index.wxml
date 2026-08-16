@@ -1,0 +1,57 @@
+<view class="page-body">
+  <view class="hero card">
+    <view class="avatar">DS</view>
+    <view class="profile-id">
+      <view class="mono id-text">{{user}}</view>
+      <view class="term mono">$ dsh --profile mobile</view>
+      <view class="term-ok mono">✓ 12 插件已加载 · {{online}} 台设备在线_</view>
+    </view>
+  </view>
+
+  <view class="stats card">
+    <view class="stat">
+      <view class="stat-num">{{devices}}</view>
+      <view class="caption">设备</view>
+    </view>
+    <view class="stat">
+      <view class="stat-num">{{chats}}</view>
+      <view class="caption">对话</view>
+    </view>
+  </view>
+
+  <view class="caption preset-label">Agent 预设</view>
+  <view class="settings card">
+    <view wx:if="{{presets.length === 0}}" class="preset-empty">{{presetHint}}</view>
+    <view
+      wx:for="{{presets}}"
+      wx:key="id"
+      class="setting"
+      data-id="{{item.id}}"
+      bind:tap="tapPreset"
+    >
+      <text class="setting-label">{{item.label}}</text>
+      <text wx:if="{{item.isDefault}}" class="preset-tag">默认</text>
+      <text wx:if="{{item.id === selected}}" class="preset-check">✓</text>
+    </view>
+  </view>
+
+  <view class="settings card">
+    <view
+      wx:for="{{settings}}"
+      wx:key="key"
+      class="setting"
+      data-key="{{item.key}}"
+      data-gated="{{item.gated}}"
+      data-url="{{item.url}}"
+      bind:tap="tapSetting"
+    >
+      <text class="setting-label">{{item.label}}</text>
+      <text wx:if="{{item.gated}}" class="gated-tag">仅限本机</text>
+      <text wx:if="{{item.url}}" class="chevron">↗</text>
+      <text wx:else class="chevron">›</text>
+    </view>
+  </view>
+
+  <view class="footer caption">DSH 手机版 · 构建 2519</view>
+</view>
+<tab-bar active="profile" />

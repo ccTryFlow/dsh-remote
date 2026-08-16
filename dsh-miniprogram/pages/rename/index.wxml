@@ -1,0 +1,32 @@
+<view class="page-body">
+  <view wx:if="{{paired}}" class="caption badge">配对 · 2/2 · {{time}}</view>
+
+  <view wx:if="{{paired}}" class="success">
+    <view class="check">✓</view>
+    <view class="ok-title">配对成功</view>
+    <view class="ok-caption mono">配对完成 · {{time}}</view>
+  </view>
+
+  <view class="card device-card">
+    <view class="mono id-line">设备 {{deviceId}}</view>
+    <view class="mono port-line">:{{port}}</view>
+  </view>
+
+  <view class="form">
+    <view class="form-label">设备名称</view>
+    <input
+      class="name-input"
+      placeholder="如:书房台式机"
+      placeholder-class="placeholder"
+      maxlength="24"
+      value="{{name}}"
+      bindinput="onInput"
+    />
+    <view class="form-hint">支持中文、字母与短横线,不超过 24 字符</view>
+  </view>
+
+  <view class="btn-primary {{saving ? 'disabled' : ''}}" bind:tap="save">{{saving ? '保存中…' : '保存'}}</view>
+  <view class="btn-ghost skip" bind:tap="skip">跳过,使用默认名称</view>
+
+  <view class="tip caption">名称将显示在设备列表与工作区聊天记录</view>
+</view>

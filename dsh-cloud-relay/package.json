@@ -1,0 +1,13 @@
+{
+  "name": "dsh-cloud-relay",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Public cloud relay for dsh: routes frames between PC harness plugins (outbound uplink) and mini program clients over the internet",
+  "scripts": {
+    "start": "node src/server.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

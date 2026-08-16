@@ -1,0 +1,272 @@
+<scroll-view class="messages" scroll-y="{{messages.length > 1}}" scroll-top="{{scrollTop}}" bindscroll="onMsgScroll" bindscrolltolower="onMsgBottom" lower-threshold="40">
+  <view wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}">
+    <view wx:if="{{item.kind === 'divider'}}" class="date-divider">
+      <view class="div-line" />
+      <text class="div-text mono">{{item.text}}</text>
+      <view class="div-line" />
+    </view>
+
+    <view wx:elif="{{item.kind === 'user'}}" class="user-msg">
+      <view class="user-block">
+        <view class="user-bubble"><text user-select>{{item.text}}</text></view>
+        <view class="user-foot">
+          <text class="foot-act" data-i="{{index}}" bind:tap="copyMsg">复制</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:elif="{{item.kind === 'typing'}}" class="agent-msg">
+      <view class="agent-bubble typing mono">{{item.text}}</view>
+    </view>
+
+    <view wx:elif="{{item.kind === 'agent'}}" class="agent-msg">
+      <view wx:if="{{item.tokens}}" class="meta mono">{{item.tokens}} TOK</view>
+      <view wx:if="{{item.reasoning}}" class="thinking" data-id="{{item.id}}" bind:tap="toggleThinking">
+        <text class="thinking-title mono">{{item.thinkingOpen ? '▾' : '▸'}} 思考过程</text>
+        <view wx:if="{{item.thinkingOpen}}" class="thinking-body mono">{{item.reasoning}}</view>
+      </view>
+      <view wx:if="{{item.id === selectingId}}" class="agent-selecting">
+        <view class="select-bar">
+          <text class="select-tip">长按拖动选择文字</text>
+          <text class="select-done" bind:tap="endSelect">完成</text>
+        </view>
+        <text user-select class="agent-plain">{{item.text}}</text>
+      </view>
+      <view wx:elif="{{item.blocks.length > 0}}" class="agent-bubble md-body" data-i="{{index}}" bind:longpress="msgMenu">
+        <block wx:for="{{item.blocks}}" wx:for-item="blk" wx:key="id">
+          <rich-text wx:if="{{blk.type === 'md'}}" nodes="{{blk.html}}" />
+          <scroll-view wx:elif="{{blk.type === 'code'}}" scroll-x class="code-scroll">
+            <text class="code-text">{{blk.text}}</text>
+          </scroll-view>
+        </block>
+      </view>
+      <view wx:for="{{item.traces}}" wx:for-item="trace" wx:key="tool" class="trace mono">
+        <text class="trace-tool">{{trace.tool}}</text>
+        <text class="trace-summary">{{trace.summary}}</text>
+        <text class="trace-dur">{{trace.dur}}</text>
+      </view>
+      <view wx:if="{{item.blocks.length > 0 && !item.streaming}}" class="msg-foot">
+        <text wx:if="{{item.foot}}" class="foot-metrics mono">{{item.foot}}</text>
+        <view wx:if="{{item.id === lastAgentId}}" class="foot-actions">
+          <text class="foot-act" data-i="{{index}}" bind:tap="copyMsg">复制</text>
+          <text class="foot-act" data-i="{{index}}" bind:tap="likeMsg">点赞</text>
+          <text class="foot-act" data-i="{{index}}" data-seq="{{item.seq}}" bind:tap="forkMsg">分支</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:elif="{{item.kind === 'todo'}}" class="agent-msg">
+      <view class="todo-card">
+        <view class="todo-title">任务清单</view>
+        <view wx:for="{{item.items}}" wx:for-item="task" wx:key="content" class="todo-row {{task.status}}">
+          <text class="todo-mark">{{task.status === 'completed' ? '✓' : (task.status === 'in_progress' ? '◐' : '○')}}</text>
+          <text class="todo-text">{{task.content}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:elif="{{item.kind === 'ask'}}" class="agent-msg">
+      <view class="ask-card">
+        <block wx:if="{{item.ask.type === 'approval'}}">
+          <view class="ask-title">需要你的批准</view>
+          <view class="ask-tool mono">{{item.ask.toolName}}</view>
+          <view wx:if="{{item.ask.reason}}" class="ask-reason">{{item.ask.reason}}</view>
+          <view wx:if="{{!item.ask.settled}}" class="ask-actions">
+            <view class="ask-btn primary" data-i="{{index}}" bind:tap="askAllow">允许</view>
+            <view class="ask-btn ghost" data-i="{{index}}" bind:tap="askDeny">拒绝</view>
+          </view>
+          <view wx:else class="ask-settled">{{item.ask.settled}}</view>
+        </block>
+        <block wx:else>
+          <view class="ask-title">请回答</view>
+          <block wx:for="{{item.ask.questions}}" wx:for-item="q" wx:for-index="qi" wx:key="id">
+            <view class="ask-q">{{q.question}}</view>
+            <view wx:if="{{q.detail}}" class="ask-detail">{{q.detail}}</view>
+            <view wx:if="{{q.options.length > 0}}" class="ask-opts">
+              <view
+                wx:for="{{q.options}}"
+                wx:for-item="opt"
+                wx:for-index="oi"
+                wx:key="label"
+                class="ask-opt {{opt.on ? 'on' : ''}}"
+                data-i="{{index}}"
+                data-qi="{{qi}}"
+                data-oi="{{oi}}"
+                bind:tap="askPick"
+              >{{opt.label}}</view>
+            </view>
+            <view wx:else class="ask-input-wrap">
+              <input class="ask-input" value="{{q.custom}}" placeholder="输入你的回答" placeholder-class="placeholder" data-i="{{index}}" data-qi="{{qi}}" bindinput="askCustom" />
+            </view>
+          </block>
+          <view wx:if="{{!item.ask.settled}}" class="ask-actions">
+            <view class="ask-btn ghost" data-i="{{index}}" bind:tap="askCancel">取消</view>
+            <view class="ask-btn primary" data-i="{{index}}" bind:tap="askSubmit">提交</view>
+          </view>
+          <view wx:else class="ask-settled">{{item.ask.settled}}</view>
+        </block>
+      </view>
+    </view>
+
+    <view wx:elif="{{item.kind === 'error'}}" class="agent-msg">
+      <view class="error-bubble mono">! {{item.text}}</view>
+    </view>
+  </view>
+</scroll-view>
+
+<view class="input-bar">
+  <view class="toolbar">
+    <view class="perm-segment">
+      <view
+        wx:for="{{permissions}}"
+        wx:key="id"
+        class="perm-seg {{permission === item.id ? 'on' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="setPermission"
+      >{{item.label}}</view>
+    </view>
+    <view class="chip" bind:tap="openDrawer">工作区</view>
+    <view class="chip" bind:tap="openNav">目录</view>
+  </view>
+  <view class="toolbar">
+    <view class="chip model-chip" bind:tap="openModelSheet"><text class="chip-label">{{modelLabel}}</text> ▾</view>
+    <view class="chip" bind:tap="openEffortSheet">{{effortLabel}} ▾</view>
+  </view>
+  <view class="input-row">
+    <view class="plus" bind:tap="openSheet">＋</view>
+    <input
+      class="input-field"
+      placeholder="发送消息,或 / 唤起命令"
+      placeholder-class="placeholder"
+      value="{{input}}"
+      confirm-type="send"
+      bindinput="onInput"
+      bindconfirm="send"
+    />
+    <view class="send {{sending ? 'disabled' : ''}}" bind:tap="send">↑</view>
+  </view>
+</view>
+
+<view wx:if="{{sheetOpen}}" class="scrim" bind:tap="closeSheet" />
+<view wx:if="{{sheetOpen}}" class="command-sheet">
+  <view class="grabber"><view class="grabber-bar" /></view>
+  <view class="sheet-header">
+    <text class="sheet-title">命令面板</text>
+    <text class="sheet-hint">键入 / 快速唤起</text>
+  </view>
+  <view wx:for="{{commands}}" wx:key="token" class="cmd" data-token="{{item.token}}" bind:tap="pickCommand">
+    <text class="cmd-token mono">{{item.token}}</text>
+    <text class="cmd-desc">{{item.desc}}</text>
+  </view>
+</view>
+
+<view wx:if="{{modelSheetOpen}}" class="scrim" bind:tap="closeModelSheet" />
+<view wx:if="{{modelSheetOpen}}" class="command-sheet">
+  <view class="grabber"><view class="grabber-bar" /></view>
+  <view class="sheet-header">
+    <text class="sheet-title">模型</text>
+    <text class="sheet-hint">{{modelsLoading ? '加载中…' : models.length + ' 个模型'}}</text>
+  </view>
+  <view wx:for="{{models}}" wx:key="id" class="cmd" data-id="{{item.id}}" data-provider="{{item.provider}}" bind:tap="pickModel">
+    <text class="cmd-token mono">{{item.name}}</text>
+    <text class="cmd-desc">{{item.providerName}} · {{model === item.id ? '当前使用' : item.efforts.length + ' 个推理等级'}}</text>
+  </view>
+</view>
+
+<view wx:if="{{effortSheetOpen}}" class="scrim" bind:tap="closeEffortSheet" />
+<view wx:if="{{effortSheetOpen}}" class="command-sheet">
+  <view class="grabber"><view class="grabber-bar" /></view>
+  <view class="sheet-header">
+    <text class="sheet-title">推理等级</text>
+    <text class="sheet-hint">{{modelLabel}}</text>
+  </view>
+  <view wx:for="{{efforts}}" wx:key="id" class="cmd" data-id="{{item.id}}" data-label="{{item.name}}" bind:tap="pickEffort">
+    <text class="cmd-token mono">{{item.name}}</text>
+    <text class="cmd-desc">{{effort === item.id ? '当前使用' : ''}}</text>
+  </view>
+</view>
+
+<view wx:if="{{drawerOpen}}" class="scrim" bind:tap="closeDrawer" />
+<view wx:if="{{drawerOpen}}" class="drawer">
+  <view class="panel-header">
+    <view class="panel-title">工作区</view>
+    <view class="panel-sub mono">{{sessionsLoading ? "加载中…" : sessions.length + " 个会话"}}</view>
+  </view>
+  <view wx:if="{{currentTitle !== ''}}" class="current-session" bind:tap="renameCurrentSession">
+    <view class="session-name">{{currentTitle}}</view>
+    <view class="session-meta mono">当前会话 · 点击重命名</view>
+  </view>
+
+  <view class="folder-header">
+    <view class="caption">文件夹</view>
+    <text class="folder-add" bind:tap="newFolder">＋ 新建</text>
+  </view>
+
+  <view wx:for="{{folders}}" wx:key="workspaceId" class="folder" data-id="{{item.workspaceId}}" data-title="{{item.title}}" bind:longpress="folderMenu">
+    <view class="folder-title" data-id="{{item.workspaceId}}" bind:tap="toggleFolder">
+      <text class="folder-caret">{{foldOpen[item.workspaceId] === true ? '▾' : '▸'}}</text>
+      <text>{{item.title}}</text>
+      <text class="folder-count mono">{{item.sessions.length}}</text>
+    </view>
+    <block wx:if="{{foldOpen[item.workspaceId] === true}}">
+      <view class="folder-path mono">{{item.path}}</view>
+      <view wx:for="{{item.sessions}}" wx:for-item="session" wx:key="id" class="session {{session.id === activeSessionId ? 'active' : ''}}" data-id="{{session.id}}" data-title="{{session.title}}" bind:tap="openHistory" bind:longpress="sessionMenu">
+        <view class="session-row">
+          <view class="session-dot {{session.id === activeSessionId ? 'on' : ''}}" />
+          <view class="session-name">{{session.title}}</view>
+        </view>
+        <view class="session-meta mono">继续 →</view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{ungrouped.length > 0}}" class="caption list-label toggle-label" bind:tap="toggleUngrouped">{{ungroupedOpen ? '▾' : '▸'}} 未分组 · UNGROUPED</view>
+  <block wx:if="{{ungroupedOpen}}">
+    <view wx:for="{{ungrouped}}" wx:key="id" class="session {{item.id === activeSessionId ? 'active' : ''}}" data-id="{{item.id}}" data-title="{{item.title}}" bind:tap="openHistory" bind:longpress="sessionMenu">
+      <view class="session-row">
+        <view class="session-dot {{item.id === activeSessionId ? 'on' : ''}}" />
+        <view class="session-name">{{item.title}}</view>
+      </view>
+      <view class="session-meta mono">继续 →</view>
+    </view>
+  </block>
+
+  <view wx:if="{{!sessionsLoading && folders.length === 0 && ungrouped.length === 0}}" class="session-empty caption">还没有会话,发第一条消息即创建</view>
+  <view wx:if="{{sessionsLoading}}" class="session-empty caption">LOADING…</view>
+</view>
+
+<view wx:if="{{navOpen}}" class="scrim" bind:tap="closeNav" />
+<view wx:if="{{navOpen}}" class="nav-panel">
+  <view class="panel-header">
+    <view class="panel-title">对话目录</view>
+    <view class="panel-sub mono">{{navItems.length}} 条提问 · 点击跳转</view>
+  </view>
+  <view wx:if="{{navItems.length === 0}}" class="nav-empty caption">还没有提问</view>
+  <view wx:for="{{navItems}}" wx:key="mid" class="nav-item" data-mid="{{item.mid}}" bind:tap="jumpTo">
+    <view class="nav-clock mono">{{item.clock}}</view>
+    <view class="nav-brief">{{item.brief}}</view>
+  </view>
+</view>
+
+<view wx:if="{{msgMenu.open}}" class="msg-menu-mask" bind:tap="closeMsgMenu" catch:touchmove="closeMsgMenu" />
+<view wx:if="{{msgMenu.open}}" class="msg-menu" style="top:{{msgMenu.top}}px;left:{{msgMenu.left}}px">
+  <view class="msg-menu-item" catch:tap="menuCopyAll">全选复制</view>
+  <view class="msg-menu-sep" />
+  <view class="msg-menu-item" catch:tap="menuCopySelect">选择复制</view>
+  <view class="msg-menu-arrow {{msgMenu.above ? 'down' : 'up'}}" style="left:{{msgMenu.arrowLeft}}px" />
+</view>
+
+<view wx:if="{{dialog.open}}" class="dialog-scrim" bind:tap="cancelDialog" />
+<view wx:if="{{dialog.open}}" class="dialog">
+  <view class="dialog-title">{{dialog.title}}</view>
+  <view class="dialog-label-row">
+    <text class="dialog-label">{{dialog.label}}</text>
+    <text wx:if="{{dialog.max}}" class="dialog-count">{{dialog.value.length}}/{{dialog.max}}</text>
+  </view>
+  <view class="dialog-input-wrap">
+    <input class="dialog-input" value="{{dialog.value}}" placeholder="{{dialog.placeholder}}" placeholder-class="placeholder" focus="{{dialog.open}}" bindinput="onDialogInput" maxlength="{{dialog.max || 200}}" />
+  </view>
+  <view wx:if="{{dialog.hint}}" class="dialog-hint">{{dialog.hint}}</view>
+  <view class="dialog-save" bind:tap="confirmDialog">{{dialog.confirmText}}</view>
+  <view class="dialog-skip" bind:tap="cancelDialog">取消</view>
+</view>

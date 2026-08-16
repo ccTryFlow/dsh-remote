@@ -1,0 +1,45 @@
+<view class="page-body">
+  <view class="page-title">连接设备</view>
+  <view class="page-subtitle caption">扫码或输入 6 位配对码</view>
+
+  <view class="segmented">
+    <view class="seg {{mode === 'scan' ? 'on' : ''}}" data-mode="scan" bind:tap="switchMode">扫码</view>
+    <view class="seg {{mode === 'code' ? 'on' : ''}}" data-mode="code" bind:tap="switchMode">数字码</view>
+  </view>
+
+  <view wx:if="{{mode === 'scan'}}" class="qr-zone card">
+    <view class="qr-box">
+      <view class="corner tl" /><view class="corner tr" /><view class="corner bl" /><view class="corner br" />
+      <view class="qr-hint mono">二维码</view>
+    </view>
+    <view class="qr-caption">对准设备端二维码 · 自动配对</view>
+    <view class="scan-btn" bind:tap="scan">打开相机扫码</view>
+  </view>
+
+  <block wx:if="{{mode === 'code'}}">
+    <view class="digits-wrap" bind:longpress="clearCode">
+      <view class="digits">
+        <view wx:for="{{digits}}" wx:key="index" class="digit-box {{item !== '' ? 'filled' : ''}} {{focusIndex === index ? 'cursor' : ''}}">
+          <text wx:if="{{item !== ''}}">{{item}}</text>
+        </view>
+      </view>
+      <input
+        class="code-input"
+        type="number"
+        maxlength="6"
+        value="{{codeValue}}"
+        focus="{{codeFocus}}"
+        bindinput="onCodeInput"
+      />
+    </view>
+
+    <view class="btn-primary {{submitting ? 'disabled' : ''}}" bind:tap="connect">
+      {{submitting ? '连接中…' : '连接设备 →'}}
+    </view>
+  </block>
+
+  <view class="hint">
+    <view class="hint-label">设备端运行以下命令查看 6 位数字码</view>
+    <view class="cli mono">pnpm dsh web</view>
+  </view>
+</view>
