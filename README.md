@@ -33,16 +33,20 @@
 
 ### 1. PC:安装插件
 
-在 deepseek-harness 仓库内:
+在 deepseek-harness 仓库内执行(无需克隆本仓库,一条命令自动下载插件并写入 profile 配置,之后每次 `pnpm dsh web` 都随启动自动运行):
 
 ```sh
-pnpm dsh plugin --profile web add link:/path/to/dsh-remote/dsh-relay-plugin
+pnpm dsh plugin --profile web add github:ccTryFlow/dsh-remote#path:dsh-relay-plugin
 pnpm dsh web
 ```
 
+更新插件 = 重跑同一条 add 命令(重新解析到最新 main)。
+
 启动后终端会打印 6 位配对码 + 二维码。**只走局域网(可选)**到此为止:小程序 `RELAY_BASE` 填 `http://<PC内网IP>:4010` 即可。
 
-> 改了插件源码后需要重启 `dsh web` 才生效。
+> 前置要求:`git` 和 `pnpm` 在 PATH 上(GitHub 拉取用)。
+> fork 本仓库自建时,把命令里的 `github:ccTryFlow` 换成 `github:<你的用户名>` 即可从你的仓库安装。
+> 本地开发插件源码时改用本地链接:`pnpm dsh plugin --profile web add link:./dsh-relay-plugin`(在仓库根目录执行;改完需重启 `dsh web` 才生效)。
 
 ### 2. 部署云中继(需要外网访问时)
 

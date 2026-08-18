@@ -4,14 +4,14 @@ deepseek-harness 的中继 bundle 插件:随 `dsh web` 在宿主进程内运行,
 
 ## 安装
 
-在 deepseek-harness 仓库内:
+在 deepseek-harness 仓库内(从 GitHub 一条命令安装,无需克隆本仓库;更新 = 重跑同一条命令):
 
 ```sh
-pnpm dsh plugin --profile web add link:/path/to/dsh-relay-plugin
+pnpm dsh plugin --profile web add github:ccTryFlow/dsh-remote#path:dsh-relay-plugin
 pnpm dsh web
 ```
 
-link 方式指向源码目录,改 `src/index.js` 后重启 `dsh web` 即生效。
+本地开发改 `src/index.js` 时,改用 `link:` 指向源码目录(`pnpm dsh plugin --profile web add link:./dsh-relay-plugin`,在仓库根目录执行),改完重启 `dsh web` 即生效。
 
 ## 运行行为
 
