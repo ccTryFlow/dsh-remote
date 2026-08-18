@@ -24,7 +24,7 @@
 
 | PC 启动 `dsh web`,终端打印配对码 + 二维码 | 手机小程序扫码/输码绑定 |
 | :---: | :---: |
-| ![PC 配对码](docs/demo/pc-pairing.png) | ![手机扫码](docs/demo/phone-scan.png) |
+| ![PC 配对码](docs/demo/pc-pairing.png) | ![手机扫码](docs/demo/phone-scan.png) | ![小程序码](docs/demo/gh_c91ff5a2d811_430.jpg) |
 
 完整演示视频:[docs/demo/demo.mp4](docs/demo/demo.mp4)
 
