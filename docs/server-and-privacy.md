@@ -34,7 +34,7 @@
    docker run -d --name dsh-cloud-relay --restart=always \
      -p 127.0.0.1:4020:4020 -v $(pwd)/state:/data dsh-cloud-relay
    ```
-3. **PC 端指向你的中继**:
+3. **PC 端指向你的中继**(当次生效:命令前缀;永久生效:把同一行写进 `~/.dsh/.env`,dsh 启动自动加载):
    ```sh
    RELAY_CLOUD_URL=wss://你的域名 pnpm dsh web
    ```

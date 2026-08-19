@@ -16,7 +16,7 @@ pnpm dsh web
 ## 运行行为
 
 - 随宿主启动,LAN 监听 `0.0.0.0:4010`(`RELAY_LAN_PORT` 可改);端口被占时只警告不崩溃
-- 云上行:设置 `RELAY_CLOUD_URL=wss://relay.example.com`(或 `~/.dsh/relay-lan.json` 的 `cloudUrl`)后出站连云中继;**默认为空 = 只走局域网**
+- 云上行:设置 `RELAY_CLOUD_URL=wss://relay.example.com` 后出站连云中继;**默认为空 = 只走局域网**。持久化可写 `~/.dsh/.env`(dsh 启动自动加载)或 profile patch 层的插件配置 `cloudUrl`;优先级:环境变量 > `.env` > `cloudUrl`。`~/.dsh/relay-lan.json` 只是绑定 state 文件(deviceId + token),配置写那里不生效
 - 启动时打印 6 位配对码 + 终端二维码(5 分钟有效);未绑定时持续换新,绑定后安静(要常驻换新设 `RELAY_CLOUD_PAIRING=1`)
 - 绑定持久化在 `~/.dsh/relay-lan.json`(deviceId + cloud token),重启免配对
 - 桥接 harness 的 `/api/events.mux` 与 `/api/events.host` 两条下行 WS,以 `{t:'ev',s:'mux'|'host',frame}` 帧转发给客户端;RPC 帧透传到本进程 `/api`

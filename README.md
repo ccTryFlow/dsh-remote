@@ -87,11 +87,39 @@ server {
 }
 ```
 
-然后让插件连上你的中继(环境变量方式,或写入 `~/.dsh/relay-lan.json` 的 `cloudUrl`):
+然后让插件连上你的中继——把 `RELAY_CLOUD_URL` 设为你的 wss 地址,`pnpm dsh web` 启动时自动连云。三种写法任选其一:
+
+**方式一:只对当次启动生效**(环境变量前缀;下面是 bash / git-bash 语法):
 
 ```sh
 RELAY_CLOUD_URL=wss://relay.example.com pnpm dsh web
+# PowerShell:$env:RELAY_CLOUD_URL='wss://relay.example.com'; pnpm dsh web
+# cmd:       set RELAY_CLOUD_URL=wss://relay.example.com&& pnpm dsh web
 ```
+
+**方式二(推荐):写进 `~/.dsh/.env`,一次配置、之后每次启动自动读取**:
+
+```
+RELAY_CLOUD_URL=wss://relay.example.com
+```
+
+dsh 每次启动自动加载「运行目录的 `.env`」和「`~/.dsh/.env`」两处(前者优先),且都不会覆盖已导出的环境变量——想临时改地址或关掉云连接,当次启动用方式一前缀覆盖即可(设空串 = 只走局域网)。
+
+**方式三:写 profile 的 patch 层** `~/.dsh/profiles/web/cordis.patch.yml`(即插件配置 `cloudUrl`,同样持久):
+
+```yaml
+- id: relay-lan
+  config:
+    host: '0.0.0.0'
+    port: 4010
+    cloudUrl: 'wss://relay.example.com'
+```
+
+(`config` 整体替换、不深合并,`host`/`port` 需照抄默认值。)
+
+优先级:命令行环境变量 > 运行目录 `.env` > `~/.dsh/.env` > 插件配置 `cloudUrl` > 默认(不连云)。
+
+注意:`~/.dsh/relay-lan.json` 是插件自己维护的绑定 state 文件(deviceId + token),把配置写进去**不会生效**。
 
 ### 3. 配置小程序
 
@@ -123,8 +151,9 @@ module.exports = {
 |---|---|---|---|---|
 | 小程序 | `RELAY_BASE` | `utils/config.js` | 占位符,**必改** | 中继地址;`http(s)://` 起头,WS 自动推导 |
 | 小程序 | `USER_KEY` | `utils/config.js` | `relayUserV2` | 身份在 wx storage 的 key,一般不动 |
-| 插件 | `RELAY_CLOUD_URL` | 环境变量 | 空(不连云) | `wss://relay.example.com`;设空串 = 强制只走 LAN |
-| 插件 | `cloudUrl` / `keepPairing` | `~/.dsh/relay-lan.json` | — | 同名配置的持久化形式,优先级低于环境变量 |
+| 插件 | `RELAY_CLOUD_URL` | 环境变量(命令前缀) | 空(不连云) | `wss://relay.example.com`;设空串 = 强制只走 LAN |
+| 插件 | `RELAY_CLOUD_URL` 等 | `~/.dsh/.env` 或运行目录 `.env` | 不设 | 持久化写法,dsh 启动自动加载;优先级低于命令行环境变量 |
+| 插件 | `cloudUrl` / `keepPairing` | profile patch 层(`~/.dsh/profiles/web/cordis.patch.yml`,id: relay-lan 的 config) | — | 同名配置的持久化形式,优先级低于 `.env` |
 | 插件 | `RELAY_LAN_PORT` | 环境变量 | `4010` | LAN 监听端口(`0.0.0.0`) |
 | 插件 | `RELAY_CLOUD_PAIRING` | 环境变量 | `0` | `1` = 已绑定时也持续刷新配对码(每 4 分钟);默认只在启动时打一个码、未绑定时持续换新 |
 | 中继 | `RELAY_PORT` | 环境变量 | `4020` | 监听端口 |
