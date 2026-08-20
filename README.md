@@ -1,5 +1,5 @@
 # dsh-remote
-
+社区王者:[linux.do](https://linux.do/)
 在手机上(微信小程序)远程使用 PC 上的 [deepseek-harness](https://www.deepseek.com/harness/):查看会话、继续对话、管理工作区文件夹、切换模型/推理等级/权限,支持流式输出、思考过程、工具轨迹、人工审批面板与任务清单。
 
 **agent 始终跑在你的 PC 上**(会话、历史、模型配置都取自 PC,PC 在线才能聊);中继只做跨网络帧转发,不落任何会话数据。
